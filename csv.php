@@ -2,20 +2,20 @@
 
 class Csv {
 	// take a CSV line (utf-8 encoded) and returns an array
-    // 'string1,string2,"string3","the ""string4"""' => array('string1', 'string2', 'string3', 'the "string4"')
-    static public function parseString($string) {
-    	$values = array();
-    	$string = str_replace("\r\n", '', $string); // eat the traling new line, if any
-    	if ($string == '') return $values;
-    	$tokens = explode(',', $string);
-    	$count = count($tokens);
-    	for ($i = 0; $i < $count; $i++) {
-    		$token = $tokens[$i];
-    		$len = strlen($token);
-    		$newValue = '';
-    		if ($len > 0 and $token[0] == '"') { // if quoted
-    			$token = substr($token, 1); // remove leading quote
-    			do { // concatenate with next token while incomplete
+	// 'string1,string2,"string3","the ""string4"""' => array('string1', 'string2', 'string3', 'the "string4"')
+	static public function parseString($string) {
+		$values = array();
+		$string = str_replace("\r\n", '', $string); // eat the traling new line, if any
+		if ($string == '') return $values;
+		$tokens = explode(',', $string);
+		$count = count($tokens);
+		for ($i = 0; $i < $count; $i++) {
+			$token = $tokens[$i];
+			$len = strlen($token);
+			$newValue = '';
+			if ($len > 0 and $token[0] == '"') { // if quoted
+				$token = substr($token, 1); // remove leading quote
+				do { // concatenate with next token while incomplete
 					$complete = Csv::_hasEndQuote($token);
 					$token = str_replace('""', '"', $token); // unescape escaped quotes
 					$len = strlen($token);
@@ -27,26 +27,26 @@ class Csv {
 						if ($i == $count - 1) throw new Exception('Illegal unescaped quote.');
 						$token = $tokens[++$i];
 					}
-    			} while (!$complete);
-    			
-    		} else { // unescaped, use token as is
-    			$newValue .= $token;
-    		}
-    		
-    		$values[] = $newValue;
-    	}
-    	return $values;
-    }
+				} while (!$complete);
+
+			} else { // unescaped, use token as is
+				$newValue .= $token;
+			}
+
+			$values[] = $newValue;
+		}
+		return $values;
+	}
     
-    static public function escapeString($string) {
-    	$string = str_replace('"', '""', $string);
-    	if (strstr($string, '"') or strstr($string, ',')) {
-    		$string = '"'.$string.'"';
-    	}
-    	
+	static public function escapeString($string) {
+		$string = str_replace('"', '""', $string);
+		if (strstr($string, '"') or strstr($string, ',')) {
+			$string = '"'.$string.'"';
+		}
+
 		return $string;
-    }
-    
+	}
+
 	// checks if a string ends with an unescaped quote
 	// 'string"' => true
 	// 'string""' => false
@@ -73,7 +73,7 @@ class CsvReader implements Iterator {
 	protected $filename = null;
 	protected $currentLine = null;
 	protected $currentArray = null;
-	
+
 	public function __construct($filename) {
 		$this->fileHandle = fopen($filename, 'r');
 		if (!$this->fileHandle) return;
@@ -81,11 +81,11 @@ class CsvReader implements Iterator {
 		$this->position = 0;
 		$this->_readLine();
 	}
-	
+
 	public function __destruct() {
 		$this->close();
 	}
-	
+
 	// You should not have to call it unless you need to 
 	// explicitly free the file descriptor
 	public function close() {
@@ -94,13 +94,13 @@ class CsvReader implements Iterator {
 			$this->fileHandle = null;
 		}
 	}
-	
+
 	public function rewind() {
 		if ($this->fileHandle) {
 			$this->position = 0;
 			rewind($this->fileHandle);
 		}
-		
+
 		$this->_readLine();
 	}
 
@@ -108,30 +108,29 @@ class CsvReader implements Iterator {
 		return $this->currentArray;
 	}
 
-    public function key() {
-        return $this->position;
-    }
+	public function key() {
+		return $this->position;
+	}
 
-    public function next() {
-        $this->position++;
-        $this->_readLine();
-    }
+	public function next() {
+		$this->position++;
+		$this->_readLine();
+	}
 
-    public function valid() {
-        return $this->currentArray !== null;
-    }
-    
-    protected function _readLine() {
-    	if (!feof($this->fileHandle)) $this->currentLine = utf8_encode(fgets($this->fileHandle));
-    	else $this->currentLine = null;
+	public function valid() {
+		return $this->currentArray !== null;
+	}
+
+	protected function _readLine() {
+		if (!feof($this->fileHandle)) $this->currentLine = utf8_encode(fgets($this->fileHandle));
+		else $this->currentLine = null;
 		if ($this->currentLine != '') $this->currentArray = Csv::parseString($this->currentLine);
 		else $this->currentArray = null;
-    }
-    
+	}
 }
 
 class CsvWriter {
-	
+
 	protected $fileHandle = null;
 	
 	public function __construct($filename, $mode = 'w') {
@@ -139,11 +138,11 @@ class CsvWriter {
 		$this->fileHandle = fopen($filename, $mode);
 		if (!$this->fileHandle) throw new Exception("Impossible to open file $filename.");
 	}
-	
+
 	public function __destruct() {
 		$this->close();
 	}
-	
+
 	public function addLine(array $values) {
 		foreach ($values as $key => $value) {
 			$values[$key] = utf8_decode(Csv::escapeString($value));
@@ -161,5 +160,4 @@ class CsvWriter {
 			$this->fileHandle = null;
 		}
 	}
-	
 }
