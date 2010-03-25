@@ -37,10 +37,10 @@ class Csv {
 		}
 		return $values;
 	}
-    
+
 	static public function escapeString($string) {
 		$string = str_replace('"', '""', $string);
-		if (strstr($string, '"') or strstr($string, ',')) {
+		if (strpos($string, '"') !== false or strpos($string, ',') !== false) {
 			$string = '"'.$string.'"';
 		}
 
@@ -86,7 +86,7 @@ class CsvReader implements Iterator {
 		$this->close();
 	}
 
-	// You should not have to call it unless you need to 
+	// You should not have to call it unless you need to
 	// explicitly free the file descriptor
 	public function close() {
 		if ($this->fileHandle) {
@@ -132,7 +132,7 @@ class CsvReader implements Iterator {
 class CsvWriter {
 
 	protected $fileHandle = null;
-	
+
 	public function __construct($filename, $mode = 'w') {
 		if ($mode != 'w' and $mode != 'a') throw new Exception('CsvWriter only accepts "w" and "a" mode.');
 		$this->fileHandle = fopen($filename, $mode);
@@ -150,7 +150,7 @@ class CsvWriter {
 		$string = implode(',', $values) . "\r\n";
 		fwrite($this->fileHandle, $string);
 	}
-	
+
 	// You should not have to call it unless you need to flush the
 	// data from the buffer to your file explicitly before the
 	// end of your script

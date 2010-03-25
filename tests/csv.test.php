@@ -74,17 +74,17 @@ class CsvTest extends UnitTestCase {
 		$result = Csv::_hasEndQuote('a string');
 		$this->assertFalse($result);
 	}
-    
+
 	function testhasEndQuote_EndWithSingleQuote() {
 		$result = Csv::_hasEndQuote('a string"');
 		$this->assertTrue($result);
 	}
-    
+
 	function testHasEndQuote_EndWithOneEscapedQuote() {
 		$result = Csv::_hasEndQuote('a string""');
 		$this->assertFalse($result);
 	}
-    
+
 	function testHasEndQuote_EndWithOneEscapedQuoteAndOneNotEscaped() {
 		$result = Csv::_hasEndQuote('a string"""');
 		$this->assertTrue($result);
@@ -114,7 +114,7 @@ class CsvTest extends UnitTestCase {
 		$result = Csv::_hasEndQuote('a strin"g"');
 		$this->assertTrue($result);
 	}
-    
+
 	function testHasEndQuote_EndWithOneEscapedQuoteWithQuotesInside() {
 		$result = Csv::_hasEndQuote('a strin"g""');
 		$this->assertFalse($result);
@@ -155,7 +155,7 @@ class CsvReaderTest extends UnitTestCase {
 }
 
 class CsvWriterTest extends UnitTestCase {
-	
+
 	function testCsvReader_OneLine() {
 		$filename = dirname(__FILE__) . '/data/writer-one-line.csv';
 		$csv = new CsvWriter($filename);
@@ -195,7 +195,8 @@ class CsvWriterTest extends UnitTestCase {
 		@unlink($filename);
 		$expected1 = 'One,Two words,"One ""quoted""","Single ""quote"'."\r\n";
 		$expected2 = 'Line Number,"""Two """" is here""",Is,It fine?'."\r\n";
-		$this->assertEqual($string, $expected);
+		$this->assertEqual($string1, $expected1);
+		$this->assertEqual($string2, $expected2);
 	}
 }
 ?>
