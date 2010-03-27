@@ -34,3 +34,10 @@ BUG REPORTING AND PATCHES
 
 Please use the github repository located at http://github.com/ockam/php-csv if
 you find any bugs or would like to contribute.
+
+
+USAGE
+=====
+
+Have a look at the "examples" folder. Or look directly into the source code.
+
