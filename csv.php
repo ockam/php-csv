@@ -69,6 +69,7 @@ class Csv {
 	static public function detectSeparator($filename, $separators = array(',', ';')) {
 		$file = fopen($filename, 'r');
 		$string = fgets($file);
+		fclose($file);
 		$matched = array();
 		foreach ($separators as $separator) if (preg_match("/$separator/", $string)) $matched[] = $separator;
 		if (count($matched) == 1) return $matched[0];
