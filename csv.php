@@ -3,11 +3,11 @@
 class Csv {
 	// take a CSV line (utf-8 encoded) and returns an array
 	// 'string1,string2,"string3","the ""string4"""' => array('string1', 'string2', 'string3', 'the "string4"')
-	static public function parseString($string) {
+	static public function parseString($string, $separator = ',') {
 		$values = array();
 		$string = str_replace("\r\n", '', $string); // eat the traling new line, if any
 		if ($string == '') return $values;
-		$tokens = explode(',', $string);
+		$tokens = explode($separator, $string);
 		$count = count($tokens);
 		for ($i = 0; $i < $count; $i++) {
 			$token = $tokens[$i];
@@ -23,7 +23,7 @@ class Csv {
 						$newValue .= substr($token, 0, -1); // remove trailing quote
 					} else { // incomplete, get one more token
 						$newValue .= $token;
-						$newValue .= ',';
+						$newValue .= $separator;
 						if ($i == $count - 1) throw new Exception('Illegal unescaped quote.');
 						$token = $tokens[++$i];
 					}
@@ -73,8 +73,11 @@ class CsvReader implements Iterator {
 	protected $filename = null;
 	protected $currentLine = null;
 	protected $currentArray = null;
+	protected $separator = ',';
+	
 
-	public function __construct($filename) {
+	public function __construct($filename, $separator = ',') {
+		$this->separator = $separator;
 		$this->fileHandle = fopen($filename, 'r');
 		if (!$this->fileHandle) return;
 		$this->filename = $filename;
@@ -124,7 +127,7 @@ class CsvReader implements Iterator {
 	protected function _readLine() {
 		if (!feof($this->fileHandle)) $this->currentLine = utf8_encode(fgets($this->fileHandle));
 		else $this->currentLine = null;
-		if ($this->currentLine != '') $this->currentArray = Csv::parseString($this->currentLine);
+		if ($this->currentLine != '') $this->currentArray = Csv::parseString($this->currentLine, $this->separator);
 		else $this->currentArray = null;
 	}
 }

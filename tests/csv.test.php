@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL ^ E_DEPRECATED);
 require_once(dirname(__FILE__) . '/../simpletest/autorun.php');
 require_once(dirname(__FILE__) . '/../csv.php');
 
@@ -142,6 +143,19 @@ class CsvReaderTest extends UnitTestCase {
 
 	function testCsvReader_TwoLines() {
 		$lines = new CsvReader(dirname(__FILE__) . '/data/two-lines.csv');
+		$values = array();
+		foreach ($lines as $line) {
+			$values[] = $line;
+		}
+		$expected = array(
+			array('One', 'Two words', 'One "quoted"', 'Single "quote'),
+			array('Line Number', '"Two "" is here"', 'Is', 'It fine?')
+		);
+		$this->assertEqual($values, $expected);
+	}
+	
+	function testCsvReader_SemicolonSeparator() {
+		$lines = new CsvReader(dirname(__FILE__) . '/data/semicolon-separator.csv', ';');
 		$values = array();
 		foreach ($lines as $line) {
 			$values[] = $line;
