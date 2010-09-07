@@ -64,6 +64,16 @@ class Csv {
 			else return false; // was not ending with an unescaped quote
 		}
 	}
+	
+	// very basic separator detection function
+	static public function detectSeparator($filename, $separators = array(',', ';')) {
+		$file = fopen($filename, 'r');
+		$string = fgets($file);
+		$matched = array();
+		foreach ($separators as $separator) if (preg_match("/$separator/", $string)) $matched[] = $separator;
+		if (count($matched) == 1) return $matched[0];
+		else return null;
+	}
 }
 
 class CsvReader implements Iterator {

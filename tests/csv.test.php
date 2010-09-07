@@ -120,6 +120,13 @@ class CsvTest extends UnitTestCase {
 		$result = Csv::_hasEndQuote('a strin"g""');
 		$this->assertFalse($result);
 	}
+	
+	function testDetectSeparator_ComaAndSemiColon() {
+		$result = Csv::detectSeparator(dirname(__FILE__) .'/data/two-lines.csv');
+		$this->assertEqual($result, ',');
+		$result = Csv::detectSeparator(dirname(__FILE__) .'/data/semicolon-separator.csv');
+		$this->assertEqual($result, ';');
+	}
 }
 
 class CsvReaderTest extends UnitTestCase {
