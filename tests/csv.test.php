@@ -160,6 +160,19 @@ class CsvReaderTest extends UnitTestCase {
 		);
 		$this->assertEqual($values, $expected);
 	}
+
+	function testCsvReader_TwoLinesUnix() {
+		$lines = new CsvReader(dirname(__FILE__) . '/data/two-lines-unix.csv');
+		$values = array();
+		foreach ($lines as $line) {
+			$values[] = $line;
+		}
+		$expected = array(
+			array('One', 'Two words', 'One "quoted"', 'Single "quote'),
+			array('Line Number', '"Two "" is here"', 'Is', 'It fine?')
+		);
+		$this->assertEqual($values, $expected);
+	}
 	
 	function testCsvReader_SemicolonSeparator() {
 		$lines = new CsvReader(dirname(__FILE__) . '/data/semicolon-separator.csv', ';');
