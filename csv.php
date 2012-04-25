@@ -40,7 +40,7 @@ class Csv {
 
 	static public function escapeString($string) {
 		$string = str_replace('"', '""', $string);
-		if (strpos($string, '"') !== false or strpos($string, ',') !== false) {
+		if (strpos($string, '"') !== false or strpos($string, ',') !== false or strpos($string, "\r") !== false or strpos($string, "\n") !== false) {
 			$string = '"'.$string.'"';
 		}
 

@@ -71,6 +71,12 @@ class CsvTest extends UnitTestCase {
 		$this->assertEqual($result, $expected);
 	}
 
+	function testEscapeString_StringWithInnerLineBreaks() {
+		$result = Csv::escapeString("A String\r\nWith Inner\rLine\nBreaks");
+		$expected = "\"A String\r\nWith Inner\rLine\nBreaks\"";
+		$this->assertEqual($result, $expected);
+	}
+
 	function testhasEndQuote_NoQuoteString() {
 		$result = Csv::_hasEndQuote('a string');
 		$this->assertFalse($result);
