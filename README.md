@@ -1,5 +1,8 @@
-GOAL
-====
+PHP-CSV
+=======
+
+Goal
+----
 
 The implementation in PHP of the CSV related function does not follow the
 standard (RFC 4180). It was causing problems when we tried to import/export
@@ -14,30 +17,30 @@ of memory for not so large datasets (e.g. With PHPExcel,
 We decided to use CSV as it is easily parsable and writable on the fly.
 
 
-PRESENTATION
-============
+Presentation
+------------
 
 php-csv is an open source (MIT license) library to import/export large datasets
 in the CSV format. It currently assumes the CSV files are ISO-8859-1 encoded
 and that the wanted php arrays are in UTF-8.
 
 
-UNIT TESTING
-============
+Unit Testing
+------------
 
 We used SimpleTest for the unit tests. If you want to run the tests, you'll
 have to download SimpleTest and put its folder in the same folder as csv.php.
 
 
-BUG REPORTING AND PATCHES
-=========================
+Bug Reporting and Patches
+-------------------------
 
 Please use the github repository located at http://github.com/ockam/php-csv if
 you find any bugs or would like to contribute.
 
 
-USAGE
-=====
+Usage
+-----
 
 Have a look at the "examples" folder. Or look directly into the source code.
 
